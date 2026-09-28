@@ -1,45 +1,35 @@
 # BLUFOX OVERDRIVE
 
 A Mario-Kart-style racer themed to **Blufox Mobile / Cook County Cooks (C³)**.
-One self-contained HTML file. No installs, no dependencies, no network calls.
 
 **Play:** https://blufoxmobile.github.io/Blufox-Overdrive/ — on a phone in landscape, sound on.
 
-## v3 — "Showroom" (Sept 2026)
+## v4 — "Grid" (28 Sept 2026)
 
-Same gameplay you know, rebuilt to look like a current-gen kart racer:
-
-- **Painted skies** — every circuit races in front of its own hand-painted panoramic backdrop
-  (Chicago after the storm, the Megastore atrium, a golden-hour lakefront, an aurora over
-  Frostbyte, a canyon sunset, a nebula full of stations), which also lights the karts.
-- **Real lighting** — per-circuit sun rigs, soft 2K shadows under every kart, image-based
-  reflections on paint and chrome, per-circuit colour grades, film grain, boost edge-blur.
-- **Places, not boxes** — asphalt with wear lines and puddles, rumble-strip curbs, tyre walls
-  and armco, grandstands with bobbing crowds, waving Blufox / Xfinity flags, a start gantry
-  with a big screen and start lights; skyscrapers and an L-train on Chicago, stocked shelves
-  and escalators in the Megastore, a rotating ferris wheel and lighthouse on the lakefront,
-  ski lifts and ice crystals on Frostbyte, radio masts and a plank bridge in the canyon,
-  rotating station rings and holo gates in the galaxy.
-- **Glossy karts** — clearcoat paint, chrome rims and exhausts, LED lights, underglow, number
-  plates, and drivers with real faces who lean into corners and turn their heads.
-- **Spectacle** — drift smoke that turns your colour, sparks, skid marks, boost flames and
-  light trails, shield shimmer, hit static, pulse waves, lap confetti, finish fireworks, and
-  weather on every circuit (rain, snow, dust devils, gulls, balloons, stardust).
-- **New menus** — key art on the title, driver portraits in the garage, sky cards for circuits,
-  a podium with confetti on the results screen.
-- **Harder, smarter racing** — AI now takes real racing lines, drifts for mini-turbos, blocks,
-  and uses items with intent. Four tiers: ROOKIE, PRO, ACE and **OVERDRIVE**. Track hazards
-  (oil, ice, stock carts, gulls, beach balls) and two boost-gated shortcuts.
+- **A real cast.** All eight drivers are now AI-generated 3D models — adult anthropomorphic
+  fox racing drivers, each in their own kart (`assets/kart-*.glb`), lit and shadowed by the
+  circuit. Portraits in the garage are rendered from the same models.
+- **XB8 modem.** A new item from the mystery boxes: throw it ahead and it hunts down the kart
+  in front of you (`assets/xb8.glb`). Shields still block it.
+- **Walls off the track.** The big set-dressing walls that used to sit on the racing line
+  (and that you could drive through) are gone. Nothing solid-looking is inside 30 m of the
+  centreline; the guardrail you see is the guardrail you hit.
+- **Painted skylines.** Every circuit races in front of its own painted panorama
+  (`assets/sky-*.webp`), which also lights the karts' paint and chrome. Title key art with the
+  new cast.
 
 ## Controls
 
 **Phone** — auto-accelerate is on. Tilt to steer (or drag on the left half / ◀ ▶ buttons in
-Settings). DRIFT and ITEM are bottom-right.
+Settings). DRIFT and ITEM are bottom-right; tap ITEM to throw.
 
 **Desktop** — arrows / WASD to steer, Space to drift, Shift for items, C to look back, Esc to pause.
 
 ## Tech
 
-Single ~5 MB file (art is inlined as WebP), three.js r169 under the hood, WebGL2 with four
-auto-scaling quality tiers. Every mesh, texture, sound and note besides the painted
-backdrops and portraits is generated at runtime.
+`index.html` (three.js r169 inlined, ~0.9 MB) plus an `assets/` folder (~13 MB of models
+and paintings, cached after the first load). WebGL2 with four auto-scaling quality tiers;
+procedural soundtrack and effects.
+
+Source for this build lives in `src-v4/` (ES modules; `build.py` inlines them). The `src/`
+folder and `shell.html` are the earlier v3 "Showroom" source, kept for reference.
