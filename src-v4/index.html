@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en" data-scheme="buttons" data-quality="high">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#05060f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Blufox Overdrive. Choose your driver and take on six electric kart racing circuits.">
+<title>Blufox Overdrive</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305060f'/%3E%3Ctext x='16' y='23' font-family='Helvetica,Arial' font-size='20' font-weight='bold' font-style='italic' text-anchor='middle' fill='%235df0ff'%3EB%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+
+<canvas id="world" aria-label="Three dimensional kart racing circuit"></canvas>
+<div id="vignette" aria-hidden="true"></div>
+<div id="speedLines" aria-hidden="true"></div>
+
+<!-- ======================================================================
+     MENUS
+     ====================================================================== -->
+<main id="menu">
+
+  <header id="topbar">
+    <button id="brand" aria-label="Blufox Overdrive home">
+      <span class="brand-symbol">B<span>»</span></span>
+      <span class="brand-word">BLUFOX<small>OVERDRIVE</small></span>
+    </button>
+    <div class="header-right">
+      <span class="edition">XFINITY RACING EXPERIENCE</span>
+      <button id="sound" class="icon-btn" aria-label="Enable sound" title="Toggle sound">♪ <span>OFF</span></button>
+      <button id="settingsBtn" class="icon-btn" aria-label="Settings" title="Settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- ---------------------------------------------------------------- HOME -->
+  <section id="home" class="screen active">
+    <div class="keyart" aria-hidden="true">
+      <i class="ka-sky"></i><i class="ka-sun"></i><i class="ka-city"></i>
+      <i class="ka-road"></i><i class="ka-grid"></i><i class="ka-streaks"></i><i class="ka-glow"></i>
+      <img id="keyartShot" alt=""><!-- optional: set .src to engine.thumbnail(n) for a rendered hero -->
+    </div>
+    <div class="home-shade" aria-hidden="true"></div>
+    <div class="home-copy">
+      <p class="eyebrow"><i></i> THE GRID IS YOURS</p>
+      <h1>BLUFOX<br><em>OVERDRIVE</em></h1>
+      <p class="home-sub">Full throttle. Zero limits. <b>Eight drivers, six circuits.</b></p>
+      <div class="home-actions">
+        <button id="play" class="primary large">LET’S RACE <span>↗</span></button>
+        <button id="how" class="ghost">HOW TO PLAY</button>
+        <button id="settingsHome" class="ghost">SETTINGS</button>
+      </div>
+    </div>
+    <div class="home-footer">
+      <span><b>08</b> DRIVERS</span>
+      <span><b>06</b> CIRCUITS</span>
+      <span><b>03</b> LAPS</span>
+      <span class="build-label">OVERDRIVE <i>03</i></span>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------- GARAGE -->
+  <section id="garage" class="screen">
+    <div class="screen-heading">
+      <button class="back" data-back="home">← <span>BACK</span></button>
+      <p class="eyebrow"><i></i> 01 / SELECT DRIVER</p>
+      <h2>Meet your <em>fast side.</em></h2>
+    </div>
+    <div class="garage-layout">
+
+      <div class="driver-feature">
+        <div class="driver-halo" aria-hidden="true"></div>
+        <img id="driverPreview" alt="Selected racer in their kart">
+      </div>
+
+      <div class="driver-info">
+        <span id="driverClass" class="tag">THE ORIGINAL</span>
+        <h3 id="driverName">Blu</h3>
+        <p id="driverDesc">The face of the grid. A balanced ride with a fearless streak.</p>
+        <div id="stats"></div>
+        <button id="chooseTrack" class="primary">CHOOSE CIRCUIT <span>→</span></button>
+      </div>
+
+      <div class="driver-side">
+        <p class="col-label">THE GRID · 08</p>
+        <div id="drivers" class="driver-grid"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------ CIRCUITS -->
+  <section id="circuits" class="screen">
+    <div class="screen-heading">
+      <button class="back" data-back="garage">← <span>DRIVERS</span></button>
+      <p class="eyebrow"><i></i> 02 / SELECT CIRCUIT</p>
+      <h2>Find your <em>next rush.</em></h2>
+    </div>
+    <div id="trackGrid"></div>
+    <div class="circuit-footer">
+      <div class="circuit-blurb">
+        <strong id="trackSelected">Chicago Afterglow</strong>
+        <p id="trackDetails">Sweeping turns beneath the electric skyline.</p>
+      </div>
+      <button id="start" class="primary">START YOUR ENGINES <span>↗</span></button>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------ SETTINGS -->
+  <section id="settings" class="screen">
+    <div class="screen-heading">
+      <button class="back" data-back="home">← <span>BACK</span></button>
+      <p class="eyebrow"><i></i> SETTINGS</p>
+      <h2>Dial it <em>in.</em></h2>
+    </div>
+
+    <div class="settings-layout">
+
+      <div class="set-group">
+        <p class="col-label">CONTROLS</p>
+
+        <div class="set-row">
+          <label id="schemeLabel">Steering</label>
+          <div class="segmented" id="schemeSeg" role="radiogroup" aria-labelledby="schemeLabel">
+            <button data-scheme-option="tilt" role="radio" aria-checked="false">TILT</button>
+            <button data-scheme-option="pad" role="radio" aria-checked="false">PAD</button>
+            <button data-scheme-option="buttons" role="radio" aria-checked="true" class="on">BUTTONS</button>
+          </div>
+        </div>
+
+        <div class="set-row">
+          <label for="tiltSensitivity">Tilt sensitivity <b id="tiltSensitivityValue">1.0×</b></label>
+          <input id="tiltSensitivity" type="range" min="0.4" max="2.5" step="0.05" value="1" style="--v:.286">
+        </div>
+
+        <div class="set-row set-row-actions">
+          <button id="calibrate" class="secondary strong">
+            <b>◎ CALIBRATE TILT</b>
+            <small>Hold your phone however is comfortable, then tap.</small>
+          </button>
+          <button id="tiltEnable" class="secondary">ENABLE MOTION ACCESS</button>
+        </div>
+
+        <div class="set-row">
+          <label for="invertTilt">Invert steering</label>
+          <button id="invertTilt" class="toggle" role="switch" aria-checked="false"><i></i></button>
+        </div>
+      </div>
+
+      <div class="set-group">
+        <p class="col-label">RACE &amp; AUDIO</p>
+
+        <div class="set-row">
+          <label id="difficultyLabel">Difficulty</label>
+          <div class="segmented" id="difficultySeg" role="radiogroup" aria-labelledby="difficultyLabel">
+            <button data-difficulty="easy" role="radio" aria-checked="false">ROOKIE</button>
+            <button data-difficulty="normal" role="radio" aria-checked="true" class="on">PRO</button>
+            <button data-difficulty="hard" role="radio" aria-checked="false">OVERDRIVE</button>
+          </div>
+        </div>
+
+        <div class="set-row">
+          <label for="musicVolume">Music <b id="musicVolumeValue">70%</b></label>
+          <input id="musicVolume" type="range" min="0" max="1" step="0.05" value="0.7" style="--v:.7">
+        </div>
+
+        <div class="set-row">
+          <label for="sfxVolume">Effects <b id="sfxVolumeValue">85%</b></label>
+          <input id="sfxVolume" type="range" min="0" max="1" step="0.05" value="0.85" style="--v:.85">
+        </div>
+
+        <div class="set-row">
+          <label id="qualityLabel">Quality</label>
+          <div class="segmented" id="qualitySeg" role="radiogroup" aria-labelledby="qualityLabel">
+            <button data-quality-option="low" role="radio" aria-checked="false">LOW</button>
+            <button data-quality-option="medium" role="radio" aria-checked="false">MEDIUM</button>
+            <button data-quality-option="high" role="radio" aria-checked="true" class="on">HIGH</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="set-note">TILT is the default on a phone — calibrate it however you like to hold it. PAD steers from anywhere on the left half of the glass. BUTTONS uses the on-screen arrows.</p>
+  </section>
+
+  <!-- ------------------------------------------------------------- RESULTS -->
+  <section id="results" class="screen">
+    <div class="screen-heading">
+      <button class="back" data-back="circuits">← <span>CIRCUITS</span></button>
+      <p class="eyebrow"><i></i> RACE COMPLETE</p>
+      <h2 id="resultsTrack">Chicago Afterglow</h2>
+    </div>
+
+    <div class="results-layout">
+      <div class="result-headline">
+        <div class="result-position" id="resultPlace">1<small>ST</small></div>
+        <p class="result-tag" id="resultTag">NEW PERSONAL BEST</p>
+        <dl class="result-times">
+          <div><dt>TOTAL</dt><dd id="resultTime">00:00.00</dd></div>
+          <div><dt>BEST LAP</dt><dd id="resultBest">00:00.00</dd></div>
+        </dl>
+        <div class="result-actions">
+          <button id="raceAgain" class="primary">RACE AGAIN <span>↗</span></button>
+          <button id="nextCircuit" class="secondary">NEXT CIRCUIT</button>
+          <button id="changeDriver" class="secondary">CHANGE DRIVER</button>
+        </div>
+      </div>
+
+      <div class="result-standings">
+        <p class="col-label">FINAL STANDINGS</p>
+        <ol class="standings-table" id="resultsList">
+          <li class="is-you"><b>1</b><i style="--c:#159cff"></i><span>BLU · YOU</span><em>00:00.00</em></li>
+          <li><b>2</b><i style="--c:#48e3ae"></i><span>GLITCH</span><em>+0.00</em></li>
+          <li><b>3</b><i style="--c:#c6e9ff"></i><span>FROST</span><em>+0.00</em></li>
+          <li><b>4</b><i style="--c:#ff6243"></i><span>BLAZE</span><em>+0.00</em></li>
+          <li><b>5</b><i style="--c:#9e61ff"></i><span>NOVA</span><em>+0.00</em></li>
+          <li><b>6</b><i style="--c:#495273"></i><span>ONYX</span><em>+0.00</em></li>
+          <li><b>7</b><i style="--c:#ff6fbc"></i><span>PIXEL</span><em>+0.00</em></li>
+          <li><b>8</b><i style="--c:#ffc344"></i><span>KNOX</span><em>+0.00</em></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ======================================================================
+     RACE HUD
+     ====================================================================== -->
+<div id="hud" hidden data-phase="race">
+
+  <!-- invisible analog steering surface (left half) -->
+  <div id="steerPad" aria-hidden="true"></div>
+
+  <!-- ---- top left: position + race meta + message feed ---- -->
+  <div class="hud-topleft">
+    <div class="position">
+      <b id="position">8</b>
+      <span class="pos-suffix" id="positionSuffix">TH</span>
+      <span class="pos-of">/ <i id="fieldSize">8</i><small>POSITION</small></span>
+    </div>
+    <div class="race-meta" data-nosteer>
+      <span class="meta-track" id="raceTrack">CHICAGO AFTERGLOW</span>
+      <div class="meta-main"><b id="lap">1</b><span class="meta-laps">/ <i id="lapTotal">3</i><u> LAPS</u></span><span id="timer">00:00.00</span></div>
+      <div class="meta-sub"><span>LAP <b id="lapTime">00:00.00</b></span><span>BEST <b id="bestLap">--:--.--</b></span></div>
+    </div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- ---- top centre: corner cue + countdown ---- -->
+  <div id="cornerCue"><b>↑</b><span>KEEP IT FLOWING</span></div>
+  <div class="count-band" aria-hidden="true"></div>
+  <div id="countdown" role="status" aria-live="assertive"></div>
+
+  <!-- ---- top right: pause + live standings ---- -->
+  <button id="pause" class="icon-btn" aria-label="Pause race">❚❚</button>
+  <ol id="positionList" class="standings" data-nosteer aria-label="Race order">
+    <li data-slot="0"><b>1</b><i style="--c:#48e3ae"></i><span>GLITCH</span><em>—</em></li>
+    <li data-slot="1"><b>2</b><i style="--c:#c6e9ff"></i><span>FROST</span><em>—</em></li>
+    <li data-slot="2"><b>3</b><i style="--c:#159cff"></i><span>BLU</span><em>—</em></li>
+    <li data-slot="3"><b>4</b><i style="--c:#ff6243"></i><span>BLAZE</span><em>—</em></li>
+    <li data-slot="4"><b>5</b><i style="--c:#9e61ff"></i><span>NOVA</span><em>—</em></li>
+    <li data-slot="5"><b>6</b><i style="--c:#495273"></i><span>ONYX</span><em>—</em></li>
+    <li data-slot="6"><b>7</b><i style="--c:#ff6fbc"></i><span>PIXEL</span><em>—</em></li>
+    <li data-slot="7" class="is-you"><b>8</b><i style="--c:#ffc344"></i><span>KNOX</span><em>—</em></li>
+  </ol>
+
+  <!-- ---- bottom left: minimap + speedometer + charge meters ---- -->
+  <div class="hud-bottomleft">
+    <div class="map-wrap" data-nosteer><canvas id="minimap" width="180" height="150" aria-label="Circuit map"></canvas></div>
+    <div class="dash" data-nosteer>
+      <div class="dash-row">
+        <div class="speedo" id="speedo" style="--spd:0">
+          <span class="speedo-ring" aria-hidden="true"></span>
+          <span class="speedo-read"><b id="speed">0</b><small>KM/H</small></span>
+        </div>
+        <div class="charge" id="charge" data-stage="0">
+          <div class="charge-row"><span>DRF</span><div class="meter"><i id="driftMeter"></i><u class="tick t1"></u><u class="tick t2"></u></div></div>
+          <div class="charge-row"><span>BST</span><div class="meter boost"><i id="boostMeter"></i></div></div>
+        </div>
+      </div>
+      <span id="driftLabel">HOLD DRIFT + STEER</span>
+    </div>
+  </div>
+
+  <!-- ---- bottom centre: transient hint + keyboard legend ---- -->
+  <div id="raceHint">Auto-accelerate is on · Steer into the corners</div>
+  <div class="keyboard-hint">← → / A D STEER <span>SHIFT DRIFT</span> SPACE ITEM <span>S BRAKE</span> ESC PAUSE</div>
+
+  <!-- ---- bottom: touch controls ---- -->
+  <div class="steer-controls">
+    <button id="left" aria-label="Steer left"><span>❮</span></button>
+    <button id="right" aria-label="Steer right"><span>❯</span></button>
+  </div>
+
+  <div class="action-controls">
+    <button id="look" class="btn-look" aria-label="Look behind"><span>⤺</span><small>LOOK</small></button>
+    <button id="brake" class="btn-brake" aria-label="Brake"><span>BRAKE</span></button>
+    <button id="item" class="btn-item" data-state="empty" aria-label="No power-up collected">
+      <span class="roulette" id="itemRoulette" aria-hidden="true"><i>»</i><i>◈</i><i>ϟ</i><i>⊗</i><i>»</i><i>◈</i><i>ϟ</i><i>⊗</i></span>
+      <b id="itemIcon">◇</b>
+      <small id="itemName">NO ITEM</small>
+    </button>
+    <button id="drift" class="btn-drift" style="--charge:0" aria-label="Drift">
+      <span class="drift-ring" aria-hidden="true"></span>
+      <b>DRIFT</b><small>HOLD</small>
+    </button>
+  </div>
+
+</div>
+
+<!-- ======================================================================
+     OVERLAYS
+     ====================================================================== -->
+
+<!-- first-run tilt explainer. The ENABLE button is the iOS permission gesture. -->
+<div id="tiltPrompt" hidden>
+  <div class="prompt-card">
+    <div class="prompt-body">
+      <p class="eyebrow"><i></i> TILT TO STEER</p>
+      <h3>Hold your phone<br><em>however is comfortable.</em></h3>
+      <p class="prompt-copy">Then tap below. That angle becomes dead centre — lean left and right to steer. You can re-centre any time from Settings.</p>
+      <button id="tiltPromptEnable" class="primary">HOLD STILL &amp; TAP <span>◎</span></button>
+      <div class="prompt-row">
+        <button id="tiltPromptSkip" class="secondary">USE ON-SCREEN BUTTONS</button>
+      </div>
+    </div>
+    <div class="prompt-visual" aria-hidden="true"><span class="phone-rock"><i></i></span></div>
+  </div>
+</div>
+
+<div id="modal" class="modal" hidden><div class="modal-card" id="modalContent"></div></div>
+
+<!-- polite landscape nudge -->
+<div id="rotate" data-dismissed="0">
+  <div class="rotate-card">
+    <span class="rotate-icon" aria-hidden="true">▢</span>
+    <strong>Turn your phone sideways</strong>
+    <p>Blufox Overdrive is built for landscape. Rotate for the full width of the track.</p>
+    <button id="rotateDismiss" class="secondary">PLAY ANYWAY</button>
+  </div>
+</div>
+
+<div id="loadError" hidden>
+  <h2>Your race couldn’t load.</h2>
+  <p>Please use a browser with WebGL enabled, then reload.</p>
+  <button onclick="location.reload()" class="primary">RETRY</button>
+</div>
+
+<script type="module" src="game.js?v=2"></script>
+</body>
+</html>
